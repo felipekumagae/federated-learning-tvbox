@@ -4,9 +4,9 @@
 
 Este repositório demonstra como configurar um ambiente de **Aprendizado Federado (Federated Learning)** usando o framework [**Flower (FLWR)**](https://flower.dev) com **TensorFlow**, utilizando múltiplos clientes locais simulados. Ideal para testes, ensino e validação de conceitos distribuídos.
 
-[![Python](https://img.shields.io/badge/python-3.8--3.11-blue)](https://www.python.org/)
-[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.14-orange)](https://www.tensorflow.org/)
-[![Flower](https://img.shields.io/badge/Flower-1.5.0-brightgreen)](https://flower.dev)
+[![Python](https://img.shields.io/badge/python-3.8--3.10-blue)](https://www.python.org/)
+[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.19-orange)](https://www.tensorflow.org/)
+[![Flower](https://img.shields.io/badge/Flower-1.17.0-brightgreen)](https://flower.dev)
 
 ---
 
