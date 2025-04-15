@@ -97,12 +97,12 @@ local_epochs = 1        # Épocas locais por cliente
 
 ✅ Regras práticas para definir ROUNDS e EPOCHS
 
-Situação	Estratégia recomendada
-Poucos dados por cliente	Aumentar EPOCHS, reduzir ROUNDS
-Muitos dados por cliente	Reduzir EPOCHS, aumentar ROUNDS
-Conexão instável ou custo de comunicação alto	Treinar mais localmente (EPOCHS ↑)
-Datasets homogêneos entre clientes	EPOCHS=1~3 e ROUNDS=20+ funcionam bem
-Datasets heterogêneos (non-IID)	EPOCHS=1 e ROUNDS mais altos (50+)
+## Situação	Estratégia recomendada
+- Poucos dados por cliente	Aumentar EPOCHS, reduzir ROUNDS
+- Muitos dados por cliente	Reduzir EPOCHS, aumentar ROUNDS
+- Conexão instável ou custo de comunicação alto	Treinar mais localmente (EPOCHS ↑)
+- Datasets homogêneos entre clientes	EPOCHS=1~3 e ROUNDS=20+ funcionam bem
+- Datasets heterogêneos (non-IID)	EPOCHS=1 e ROUNDS mais altos (50+)
 ---
 
 ## 👥 Autoria
