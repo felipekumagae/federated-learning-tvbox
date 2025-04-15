@@ -1,12 +1,29 @@
-# 📦 Federated Learning Simulation with Flower + TensorFlow
+# 🌼 Federated Learning Simulation with Flower + TensorFlow
 
-> Simulação local de Aprendizado Federado com Flower, TensorFlow e MNIST.
+**Simulação local de Aprendizado Federado com Flower, TensorFlow (exemplo com MNIST).**
 
-Este repositório demonstra como configurar um ambiente de **Aprendizado Federado (Federated Learning)** usando o framework [**Flower (FLWR)**](https://flower.dev) com **TensorFlow**, utilizando múltiplos clientes locais simulados. Ideal para testes, ensino e validação de conceitos distribuídos.
+Este repositório reúne múltiplos **subprojetos de Aprendizado Federado (Federated Learning)**, cada um com um objetivo distinto (ex: detecção de anomalias, classificação com MNIST etc.).  
+Todos os projetos utilizam o framework [Flower (FLWR)](https://flower.dev/) com TensorFlow, simulando múltiplos clientes locais.
 
 [![Python](https://img.shields.io/badge/python-3.8--3.10-blue)](https://www.python.org/)
 [![TensorFlow](https://img.shields.io/badge/TensorFlow-2.19-orange)](https://www.tensorflow.org/)
 [![Flower](https://img.shields.io/badge/Flower-1.17.0-brightgreen)](https://flower.dev)
+
+---
+
+## 📁 Organização dos subprojetos
+
+Cada subpasta corresponde a uma aplicação distinta de Federated Learning:
+
+- `Anomalia_Pluviometrica/`: Detecção de anomalias em séries temporais ambientais
+- `Classificacao_MNIST/`: Classificação de dígitos com o dataset MNIST
+
+Cada subprojeto possui:
+
+- `scripts/`: scripts de simulação federada
+- `data/`: datasets utilizados
+- `requirements.txt`: dependências do subprojeto
+- `README.md`: instruções específicas
 
 ---
 
@@ -18,57 +35,42 @@ Este repositório demonstra como configurar um ambiente de **Aprendizado Federad
 
 ---
 
-## 🖥️ Instalação passo a passo
-## 🖥️ Instalação passo a passo (Windows/macOS)
+## 🖥️ Instalação passo a passo (Windows / macOS)
 
-> 💡 Recomendado: use Python 3.10 para garantir compatibilidade com TensorFlow
+> 💡 Recomendado: usar **Python 3.10** para garantir compatibilidade com TensorFlow
 
-| Etapa | macOS Terminal | Windows CMD / PowerShell |
-|------|----------------|---------------------------|
-| 1. Clone o repo | `git clone https://github.com/felipekumagae/federated-learning-tvbox.git`<br>`cd federated-learning-tvbox` | idem |
-| 2. Apague qualquer ambiente antigo | `rm -rf fl_env` | `rmdir /S /Q fl_env` |
-| 3. Crie venv com Python 3.10 | `python3.10 -m venv fl_env` | `python -m venv fl_env` (se estiver usando Python 3.10) |
-| 4. Ative o venv | `source fl_env/bin/activate` | `fl_env\Scripts\activate` ou `.\fl_env\Scripts\Activate.ps1` |
-| 5. Atualize pip | `pip install --upgrade pip` | idem |
-| 6. Instale pacotes | `pip install tensorflow flwr numpy` | idem |
-| 7. Teste o TensorFlow | `python -c "import tensorflow as tf; print(tf.__version__)"` | idem |
-| 8. Rode simulação | `python fl_simu.py` | idem |
-| 9. Finalize | `deactivate` | idem |
-
-------|----------------|---------------------------|
-| 1. Clone o repo | `git clone https://github.com/felipekumagae/federated-learning-tvbox.git`<br>`cd federated-learning-tvbox` | idem |
-| 2. Crie venv | `python3 -m venv fl_env` | `python -m venv fl_env` |
-| 3. Ative venv | `source fl_env/bin/activate` | `fl_env\Scripts\activate` ou `. fl_env\Scripts\Activate.ps1` |
-| 4. Atualize pip | `pip install --upgrade pip` | idem |
-| 5. Instale pacotes | `pip install flwr tensorflow numpy` | idem |
-| 6. Rode simulação | `python fl_simu.py` | idem |
-| 7. Finalize | `deactivate` | idem |
+| Etapa | macOS (Terminal) | Windows (CMD / PowerShell) |
+|-------|------------------|-----------------------------|
+| 1. Clone o repositório | `git clone https://github.com/felipekumagae/federated-learning-tvbox.git`<br>`cd federated-learning-tvbox` | idem |
+| 2. Crie o ambiente virtual | `python3.10 -m venv fl_env` | `python -m venv fl_env` |
+| 3. Ative o ambiente | `source fl_env/bin/activate` | `fl_env\Scripts\activate` ou `.\fl_env\Scripts\Activate.ps1` |
+| 4. Atualize o pip | `pip install --upgrade pip` | idem |
+| 5. Instale as dependências | `pip install -r requirements.txt` | idem |
+| 6. Navegue até o subprojeto e rode a simulação | `cd Anomalia_Pluviometrica/scripts`<br>`python fl_simu.py` | idem |
+| 7. Finalize (opcional) | `deactivate` | idem |
 
 ---
 
-## 🚀 O que a simulação faz
+## 🚀 O que a simulação faz 
 
-- Inicia um servidor local (`localhost:8080`)
-- Roda 3 clientes com dados diferentes do MNIST
-- Cada cliente treina localmente, depois envia os pesos ao servidor
-- O servidor agrega os pesos via média
+- Inicia um **servidor federado local** (`localhost:8080`)
+- Executa múltiplos clientes com diferentes subconjuntos de dados
+- Cada cliente **treina localmente** e envia os pesos ao servidor
+- O servidor realiza a **agregação federada via média**
 
 ---
 
 ## 📁 Estrutura do Projeto
 
 ```bash
-federated-learning-tvbox/
-├── fl_simu.py     # Script principal (servidor + clientes)
-├── README.md                    # Este arquivo
-└── fl_env/                      # Ambiente virtual (criado localmente)
+Federated_Learning/ ├── Anomalia_Pluviometrica/ │ ├── scripts/ │ ├── data/ │ ├── requirements.txt │ └── README.md ├── Classificacao_MNIST/ │ ├── scripts/ │ ├── data/ │ ├── requirements.txt │ └── README.md ├── fl_env/ # Ambiente virtual (ignorado pelo Git) ├── requirements.txt # Dependências globais (opcional) └── README.md # Este arquivo
 ```
 
 ---
 
 ## ⚙️ Personalizações possíveis
 
-No código `fl_simu.py`, altere:
+Nos scripts, altere:
 
 ```python
 num_clients = 3         # Número de clientes
