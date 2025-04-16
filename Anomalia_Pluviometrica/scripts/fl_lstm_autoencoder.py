@@ -1,4 +1,3 @@
-
 import multiprocessing
 import flwr as fl
 import pandas as pd
@@ -28,7 +27,8 @@ def create_sequences(data, window_size):
 
 def create_model(n_features):
     model = tf.keras.Sequential([
-        tf.keras.layers.LSTM(64, activation="relu", input_shape=(WINDOW_SIZE, n_features), return_sequences=True),
+        tf.keras.layers.Input(shape=(WINDOW_SIZE, n_features)),
+        tf.keras.layers.LSTM(64, activation="relu", return_sequences=True),
         tf.keras.layers.LSTM(32, activation="relu", return_sequences=False),
         tf.keras.layers.RepeatVector(WINDOW_SIZE),
         tf.keras.layers.LSTM(32, activation="relu", return_sequences=True),
@@ -74,23 +74,29 @@ for i in range(NUM_CLIENTS):
 
 # 🔹 Funções para servidor e clientes
 def start_server():
-    strategy = fl.server.strategy.FedAvg(
-        min_fit_clients=NUM_CLIENTS,
-        min_eval_clients=NUM_CLIENTS,
-        min_available_clients=NUM_CLIENTS,
+    strategy = fl.server.strategy.FedAvg()
+    fl.server.start_server(
+        server_address="127.0.0.1:8080",
+        config=fl.server.ServerConfig(num_rounds=ROUNDS),
+        strategy=strategy
     )
-    fl.server.start_server(server_address="127.0.0.1:8080", config={"num_rounds": ROUNDS}, strategy=strategy)
 
 def start_client(client_id):
-    fl.client.start_numpy_client(server_address="127.0.0.1:8080", client=clients[client_id])
+    fl.client.start_client(
+        server_address="127.0.0.1:8080",
+        client=clients[client_id].to_client()
+    )
 
 if __name__ == "__main__":
     multiprocessing.set_start_method("spawn")
     server = multiprocessing.Process(target=start_server)
-    client_procs = [multiprocessing.Process(target=start_client, args=(i,)) for i in range(NUM_CLIENTS)]
+    client_procs = [
+        multiprocessing.Process(target=start_client, args=(i,))
+        for i in range(NUM_CLIENTS)
+    ]
 
     server.start()
-    import time; time.sleep(2)
+    import time; time.sleep(2)  # Garantir que o servidor esteja pronto
 
     for p in client_procs:
         p.start()
