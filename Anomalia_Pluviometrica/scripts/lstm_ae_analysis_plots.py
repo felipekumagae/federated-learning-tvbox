@@ -23,7 +23,7 @@ sequences = create_sequences(scaled_data, WINDOW_SIZE)
 
 # Carregar modelo treinado (exemplo: fl_lstm_autoencoder localmente treinado)
 from tensorflow.keras.models import load_model
-model = load_model("/Users/felipekumagae/LINCE/Projetos/Federated_Learning/models/fl_lstmAE.h5") #escolher Modelo LSTM AE
+model = load_model("/Users/felipekumagae/LINCE/Projetos/Federated_Learning/Anomalia_Pluviometrica/models/fl_lstmAE.h5") #escolher Modelo LSTM AE
 
 # Fazer reconstrução
 X_pred = model.predict(sequences)
