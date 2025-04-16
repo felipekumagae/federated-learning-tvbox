@@ -59,7 +59,7 @@ class FLClient(fl.client.NumPyClient):
 
 # 🔁 Benchmark
 if __name__ == "__main__":
-    csv_path = "Dataset_Anomalia.csv"
+    csv_path = "../data/Dataset_Anomalia.csv"
     data = load_data(csv_path)
     scaler = StandardScaler()
     scaled_data = scaler.fit_transform(data)

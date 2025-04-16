@@ -20,7 +20,7 @@ num_clients = 3
 global_epochs = 5
 
 # Carregar dados normalizados do CSV (suponha que esteja no mesmo diretório)
-df = pd.read_csv("Dataset_Anomalia.csv")
+df = pd.read_csv("../data/Dataset_Anomalia.csv")
 df.columns = df.columns.str.strip()
 
 # Selecionar features e interpolar
