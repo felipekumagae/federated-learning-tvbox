@@ -46,7 +46,7 @@ Cada subprojeto possui:
 | 3. Ative o ambiente | `source fl_env/bin/activate` | `fl_env\Scripts\activate` ou `.\fl_env\Scripts\Activate.ps1` |
 | 4. Atualize o pip | `pip install --upgrade pip` | idem |
 | 5. Instale as dependências | `pip install -r requirements.txt` | idem |
-| 6. Navegue até o subprojeto e rode a simulação | `cd Anomalia_Pluviometrica/scripts`<br>`python fl_simu.py` | idem |
+| 6. Navegue até o subprojeto e rode a simulação Exemplo (MNIST)| `cd Classificacao_MNIST/scripts`<br>`python fl_simu.py` | idem |
 | 7. Finalize (opcional) | `deactivate` | idem |
 
 ---
