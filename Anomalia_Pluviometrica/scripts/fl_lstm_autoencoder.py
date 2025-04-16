@@ -4,6 +4,11 @@ import pandas as pd
 import numpy as np
 import tensorflow as tf
 from sklearn.preprocessing import StandardScaler
+import logging
+import time
+
+# 🔧 Verbosidade (DEBUG, INFO, WARNING, ERROR)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 # 🔧 Parâmetros
 WINDOW_SIZE = 24
@@ -14,18 +19,23 @@ ROUNDS = 3
 
 # 🔹 Funções utilitárias
 def load_data(csv_path):
+    logging.info(f"🔄 Carregando dados de: {csv_path}")
     df = pd.read_csv(csv_path)
     df = df.select_dtypes(include=[np.number])
     df.fillna(df.mean(), inplace=True)
+    logging.info(f"Dados carregados com shape: {df.shape}")
     return df.values
 
 def create_sequences(data, window_size):
+    logging.info(f"Criando janelas de tamanho {window_size}")
     sequences = []
     for i in range(len(data) - window_size + 1):
         sequences.append(data[i:i + window_size])
+    logging.info(f"Total de janelas criadas: {len(sequences)}")
     return np.array(sequences)
 
 def create_model(n_features):
+    logging.info(f"🧠 Criando modelo LSTM Autoencoder com {n_features} features")
     model = tf.keras.Sequential([
         tf.keras.layers.Input(shape=(WINDOW_SIZE, n_features)),
         tf.keras.layers.LSTM(64, activation="relu", return_sequences=True),
@@ -49,13 +59,14 @@ class FLClient(fl.client.NumPyClient):
 
     def fit(self, parameters, config):
         self.model.set_weights(parameters)
-        self.model.fit(self.train_data, self.train_data,
-                       epochs=EPOCHS, batch_size=BATCH_SIZE, verbose=0)
+        logging.info(f"📦 Cliente treinando {len(self.train_data)} sequências por {EPOCHS} épocas...")
+        self.model.fit(self.train_data, self.train_data, epochs=EPOCHS, batch_size=BATCH_SIZE, verbose=0)
         return self.model.get_weights(), len(self.train_data), {}
 
     def evaluate(self, parameters, config):
         self.model.set_weights(parameters)
         loss = self.model.evaluate(self.train_data, self.train_data, verbose=0)
+        logging.info(f"Avaliação do cliente — MSE: {loss:.4f}")
         return loss, len(self.train_data), {"mse": loss}
 
 # 🔹 Carregar dados e preparar partições
@@ -64,16 +75,17 @@ scaler = StandardScaler()
 scaled_data = scaler.fit_transform(data)
 sequences = create_sequences(scaled_data, WINDOW_SIZE)
 
-# Dividir os dados entre os clientes
 clients = []
 for i in range(NUM_CLIENTS):
     part = sequences[i::NUM_CLIENTS]
     model = create_model(n_features=sequences.shape[2])
     client = FLClient(model, part)
+    logging.info(f"👤 Cliente {i} criado com {part.shape[0]} janelas.")
     clients.append(client)
 
 # 🔹 Funções para servidor e clientes
 def start_server():
+    logging.info(f"🟢 Servidor iniciado com {ROUNDS} rounds de FL...")
     strategy = fl.server.strategy.FedAvg()
     fl.server.start_server(
         server_address="127.0.0.1:8080",
@@ -82,6 +94,7 @@ def start_server():
     )
 
 def start_client(client_id):
+    logging.info(f"🔵 Iniciando cliente {client_id}...")
     fl.client.start_client(
         server_address="127.0.0.1:8080",
         client=clients[client_id].to_client()
@@ -96,7 +109,7 @@ if __name__ == "__main__":
     ]
 
     server.start()
-    import time; time.sleep(2)  # Garantir que o servidor esteja pronto
+    time.sleep(2)  # Esperar o servidor iniciar
 
     for p in client_procs:
         p.start()
@@ -104,3 +117,6 @@ if __name__ == "__main__":
         p.join()
 
     server.join()
+# 💾 Salvar o modelo do cliente 0 após o FL
+logging.info("💾 Salvando o modelo do cliente 0 como 'fl_lstmAE.keras'")
+clients[0].model.save("/Users/felipekumagae/LINCE/Projetos/Federated_Learning/Anomalia_Pluviometrica/models/fl_lstmAE.keras")
