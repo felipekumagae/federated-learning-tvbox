@@ -7,6 +7,7 @@ import seaborn as sns
 
 # Carregamento dos dados processados
 df = pd.read_csv("../data/Dataset_Anomalia.csv")
+print("Colunas lidas:", df.columns.tolist())
 df = df.select_dtypes(include=[np.number])
 df.fillna(df.mean(), inplace=True)
 
@@ -23,7 +24,7 @@ sequences = create_sequences(scaled_data, WINDOW_SIZE)
 
 # Carregar modelo treinado (exemplo: fl_lstm_autoencoder localmente treinado)
 from tensorflow.keras.models import load_model
-model = load_model("/Users/felipekumagae/LINCE/Projetos/Federated_Learning/Anomalia_Pluviometrica/models/fl_lstmAE.h5") #escolher Modelo LSTM AE
+model = load_model("/Users/felipekumagae/LINCE/Projetos/Federated_Learning/Anomalia_Pluviometrica/models/fl_lstmAE.keras") #escolher Modelo LSTM AE
 
 # Fazer reconstrução
 X_pred = model.predict(sequences)
@@ -33,7 +34,7 @@ mse = np.mean(np.power(sequences - X_pred, 2), axis=(1,2))
 threshold = np.percentile(mse, 95)
 
 # Geração dos rótulos reais ajustados
-y_true = df['Anomalia_Pluviometrica'].values[WINDOW_SIZE - 1:]
+y_true = df["Anomalia_Pluviometrica"].values[WINDOW_SIZE - 1:]
 y_pred = (mse > threshold).astype(int)
 
 # === 1. MSE vs Threshold ===
